@@ -1,4 +1,4 @@
-=<!doctype html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -28,6 +28,8 @@
       $(function(){
         var movies = new Movies(movieData);
         new AppView({el: $('#main'), collection: movies}).render();
+        window.movieList = movies;
+
       });
     </script>
   </body>

@@ -15,14 +15,28 @@ var Movies = Backbone.Collection.extend({
   model: Movie,
 
   initialize: function() {
-    // your code here
+   /* this.comparator.on('click:', function(){
+
+    });*/
   },
 
   comparator: 'title',
 
   sortByField: function(field) {
     this.sort(field);
+    this.comparator = field;
+
+    console.log(this.comparator);
   }
+
+  // events: {
+  //   'change' : 'handleResort'
+  // },
+
+  // handleResort : function(){
+  //   this.sortByField(this.comparator);
+  //   console.log("something changed")
+  // }
 
 });
 
@@ -35,6 +49,8 @@ var AppView = Backbone.View.extend({
   handleClick: function(e) {
     var field = $(e.target).val();
     this.collection.sortByField(field);
+    console.log(field);
+
   },
 
   render: function() {
@@ -62,12 +78,19 @@ var MovieView = Backbone.View.extend({
   },
 
   events: {
-    'click button': 'handleClick'
+    'click button': 'handleClick',
   },
 
+  //collection : Movies,
+
   handleClick: function() {
-    // your code here
+    this.model.toggleLike();
   },
+
+/*  handleResort : function (){
+    this.model.collection.sortByField(this.model.collection.comparator);
+    console.log(this.model.collection);
+  },*/
 
   render: function() {
     this.$el.html(this.template(this.model.attributes));
@@ -79,7 +102,9 @@ var MovieView = Backbone.View.extend({
 var MoviesView = Backbone.View.extend({
 
   initialize: function() {
-    // your code here
+    this.collection.on('change', function() {
+      this.collection.sortByField(this.collection.comparator);
+    }, this);
   },
 
   render: function() {
@@ -91,5 +116,7 @@ var MoviesView = Backbone.View.extend({
     var movieView = new MovieView({model: movie});
     this.$el.append(movieView.render());
   }
+
+
 
 });
