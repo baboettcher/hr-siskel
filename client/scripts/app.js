@@ -15,9 +15,9 @@ var Movies = Backbone.Collection.extend({
   model: Movie,
 
   initialize: function() {
-   /* this.comparator.on('click:', function(){
-
-    });*/
+    // registers change on collection
+    // sort sorts by current comparator by default if parameter not designated
+    this.on('change', this.sort);
   },
 
   comparator: 'title',
@@ -25,8 +25,6 @@ var Movies = Backbone.Collection.extend({
   sortByField: function(field) {
     this.sort(field);
     this.comparator = field;
-
-    console.log(this.comparator);
   }
 
   // events: {
@@ -74,7 +72,9 @@ var MovieView = Backbone.View.extend({
                         </div>'),
 
   initialize: function() {
-    // your code here
+    // listen for change on model associated with this view
+    // invoke render and pass 'this' to preserve binding
+    this.model.on('change', this.render, this);
   },
 
   events: {
@@ -102,9 +102,10 @@ var MovieView = Backbone.View.extend({
 var MoviesView = Backbone.View.extend({
 
   initialize: function() {
-    this.collection.on('change', function() {
-      this.collection.sortByField(this.collection.comparator);
-    }, this);
+    // this.collection.on('change', function() {
+    //   this.collection.sortByField(this.collection.comparator);
+    // }, this);
+    this.collection.on('sort', this.render, this);
   },
 
   render: function() {
